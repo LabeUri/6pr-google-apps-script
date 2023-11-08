@@ -1,0 +1,15 @@
+function insertImage() {
+  var document = DocumentApp.openById('1jgMBNwlQj4GvvYgJbNW1GjYuj621WxmJPgvdwabk7TM'); // Замініть 'YOUR_DOCUMENT_ID' на ID вашого документа
+  var body = document.getBody();
+
+  var image = UrlFetchApp.fetch('https://www.rv-it.college/images/banners/logo_IT_short_white.png').getBlob();
+  
+  // Вставка зображення
+  var insertedImage = body.appendImage(image);
+
+  // Встановлення відступу справа (наприклад, 100 пікселів)
+  insertedImage.setWidth(100);
+  
+  // Збереження змін
+  document.saveAndClose();
+}

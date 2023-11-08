@@ -1,0 +1,38 @@
+function замінитиПосиланняНаГіперпосилання() {
+  var documentId = '1Lv40ByRDW8iKwoA2_jV9aNiQLGj5Tv1jf9lj_49vpng';
+  var document = DocumentApp.openById(documentId);
+  var body = document.getBody();
+  
+  // Знайдіть усі URL-адреси у тексті документа
+  var text = body.getText();
+  var urls = text.match(/https?:\/\/[^\s]+/g);
+
+  if (urls) {
+    for (var i = 0; i < urls.length; i++) {
+      var url = urls[i];
+      var title = отриматиЗаголовокЗURL(url);
+      if (title) {
+        // Створіть гіперпосилання з текстом заголовка
+        body.replaceText(url, title);
+        var rangeElement = body.findText(title);
+        if (rangeElement) {
+          var hyperlink = rangeElement.getElement().asText();
+          hyperlink.setLinkUrl(url);
+        }
+      }
+    }
+  }
+}
+
+function отриматиЗаголовокЗURL(url) {
+  try {
+    var response = UrlFetchApp.fetch(url);
+    var title = /<title>(.*?)<\/title>/i.exec(response.getContentText());
+    if (title && title.length > 1) {
+      return title[1];
+    }
+  } catch (e) {
+    Logger.log('Помилка отримання заголовка з URL: ' + e);
+  }
+  return null;
+}
